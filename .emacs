@@ -5,7 +5,7 @@
  ;; If there is more than one, they won't work right.
  '(custom-enabled-themes '(deeper-blue))
  '(package-selected-packages
-   '(helpful counsel ivy-rich which-key rainbow-delimiters swiper ivy helm use-package gruvbox-theme)))
+   '(magit helpful counsel ivy-rich which-key rainbow-delimiters swiper ivy helm use-package gruvbox-theme)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -27,7 +27,7 @@
 (require 'package)
 
 (setq package-archives
-      '(("gnu" . "https://elpa.gnu.org/packages/")
+      '(("elpa" . "https://elpa.gnu.org/packages/")
         ("melpa" . "https://melpa.org/packages/")
 	("org" . "https://orgmode.org/elpa/")))
 
@@ -44,8 +44,7 @@
   :diminish
   :bind (("C-s" . swiper)
          :map ivy-minibuffer-map
-         ;;("TAB" . ivy-alt-done)
-         ("C-l" . ivy-alt-done)
+         ("TAB" . ivy-alt-done)
          ("C-j" . ivy-next-line)
          ("C-k" . ivy-previous-line)
          :map ivy-switch-buffer-map
