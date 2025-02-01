@@ -18,6 +18,7 @@
 (tool-bar-mode -1)
 (menu-bar-mode -1)
 (setq inhibit-startup-screen t)
+(setq vc-follow-symlinks t)
 
 (global-display-line-numbers-mode t)
 
@@ -28,8 +29,7 @@
 (setq package-archives
       '(("gnu" . "https://elpa.gnu.org/packages/")
         ("melpa" . "https://melpa.org/packages/")
-	("org" . "https://orgmode.org/elpa/") 
-        ("melpa-stable" . "https://stable.melpa.org/packages/")))
+	("org" . "https://orgmode.org/elpa/")))
 
 (package-initialize)
 (unless package-archive-contents
@@ -90,4 +90,8 @@
   ([remap describe-command] . helpful-command)
   ([remap describe-variable] . counsel-describe-variable)
   ([remap describe-key] . helpful-key))
+
+(use-package magit
+  :custom
+  (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
 
