@@ -18,7 +18,8 @@
 (tool-bar-mode -1)
 (menu-bar-mode -1)
 (setq inhibit-startup-screen t)
-(setq vc-follow-symlinks t)
+(setq vc-follow-symlinks t) ;; follow the symlinks without asking
+(setq org-support-shift-select t) ;; use shift to select in org-mode
 
 (global-display-line-numbers-mode t)
 
