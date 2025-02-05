@@ -5,7 +5,7 @@
  ;; If there is more than one, they won't work right.
  '(custom-enabled-themes '(deeper-blue))
  '(package-selected-packages
-   '(magit helpful counsel ivy-rich which-key rainbow-delimiters swiper ivy helm use-package gruvbox-theme)))
+   '(doom-modeline doom-themes magit helpful counsel ivy-rich which-key rainbow-delimiters swiper ivy helm use-package)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -17,13 +17,13 @@
 (scroll-bar-mode -1)
 (tool-bar-mode -1)
 (menu-bar-mode -1)
-(setq inhibit-startup-screen t)
 (setq vc-follow-symlinks t) ;; follow the symlinks without asking
 (setq org-support-shift-select t) ;; use shift to select in org-mode
+(setq backup-directory-alist '(("." . "~/.emacs-backups"))) ;; set backup files in a specific directory
 
 (global-display-line-numbers-mode t)
 
-(load-theme 'gruvbox t)
+(load-theme 'doom-gruvbox t)
 
 (require 'package)
 
@@ -94,4 +94,8 @@
 (use-package magit
   :custom
   (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
+
+(use-package doom-modeline
+  :ensure t
+  :init (doom-modeline-mode 1))
 
