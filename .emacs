@@ -5,13 +5,13 @@
  ;; If there is more than one, they won't work right.
  '(custom-enabled-themes '(deeper-blue))
  '(package-selected-packages
-   '(helm-swoop doom-modeline doom-themes magit helpful which-key rainbow-delimiters helm use-package)))
+   '(org-bullets helm-swoop doom-modeline doom-themes magit helpful which-key rainbow-delimiters helm use-package)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(helm-source-header ((t (:foreground "#8EC07C")))))
 (put 'upcase-region 'disabled nil)
 
 (scroll-bar-mode -1)
@@ -40,7 +40,15 @@
 (require 'use-package)
 (setq use-package-always-ensure t)
 
+;; -------------------------------------- init config org-mode
+
 (use-package org)
+
+(require 'org-bullets)
+(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+
+(add-hook 'org-mode-hook 'org-indent-mode)
+;; -------------------------------------- finish config org-mode
 
 ;; -------------------------------------- init config helm
 
@@ -64,6 +72,7 @@
   :init
   (helm-mode 1)
   :config
+  (setq helm-M-x-show-short-doc t)
   (helm-autoresize-mode 1)
   (setq helm-autoresize-max-height 30)
   (setq helm-autoresize-min-height 20) 
@@ -82,10 +91,6 @@
     (setq header-line-format nil)))
 
 (setq helm-echo-input-in-header-line t)
-
-(custom-set-faces
- '(helm-source-header
-   ((t (:foreground "#8EC07C")))))
 
 ;; -------------------------------------- finish config helm
 
