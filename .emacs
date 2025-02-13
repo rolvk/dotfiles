@@ -5,7 +5,7 @@
  ;; If there is more than one, they won't work right.
  '(custom-enabled-themes '(deeper-blue))
  '(package-selected-packages
-   '(org-bullets helm-swoop doom-modeline doom-themes magit helpful which-key rainbow-delimiters helm use-package)))
+   '(helm-projectile projectile org-bullets helm-swoop doom-modeline doom-themes magit helpful which-key rainbow-delimiters helm use-package)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -40,15 +40,12 @@
 (require 'use-package)
 (setq use-package-always-ensure t)
 
-;; -------------------------------------- init config org-mode
-
 (use-package org)
 
 (require 'org-bullets)
 (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 
 (add-hook 'org-mode-hook 'org-indent-mode)
-;; -------------------------------------- finish config org-mode
 
 ;; -------------------------------------- init config helm
 
@@ -123,3 +120,21 @@
   :ensure t
   :init (doom-modeline-mode 1))
 
+(use-package projectile
+  :diminish projectile-mode
+  :config (projectile-mode)
+  :custom ((projectile-completion-system 'helm))
+  :bind-keymap
+  ("C-c p" . projectile-command-map)
+  :config
+  (add-to-list 'projectile-project-root-files ".sync/")
+  :init
+  (when (file-directory-p "~/Documents")
+    (setq projectile-project-search-path '("~/Documents")))
+  (setq projectile-switch-project-action #'projectile-dired))
+
+(use-package helm-projectile
+  :ensure t
+  :after (projectile helm)
+  :config
+  (helm-projectile-on))
