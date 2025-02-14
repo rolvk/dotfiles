@@ -5,13 +5,13 @@
  ;; If there is more than one, they won't work right.
  '(custom-enabled-themes '(deeper-blue))
  '(package-selected-packages
-   '(helm-projectile projectile org-bullets helm-swoop doom-modeline doom-themes magit helpful which-key rainbow-delimiters helm use-package)))
+   '(counsel-projectile counsel ivy-rich ivy projectile org-bullets doom-modeline doom-themes magit helpful which-key rainbow-delimiters use-package)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(helm-source-header ((t (:foreground "#8EC07C")))))
+ )
 (put 'upcase-region 'disabled nil)
 
 (scroll-bar-mode -1)
@@ -47,49 +47,34 @@
 
 (add-hook 'org-mode-hook 'org-indent-mode)
 
-;; -------------------------------------- init config helm
-
-(use-package helm
+(use-package ivy
   :diminish
-  :bind (("C-s" . helm-swoop)
-	 ("C-x C-f" . helm-find-files)
-	 ("C-x b" . helm-mini)
-	 ("M-x" . helm-M-x)
-         :map helm-map
-         ("TAB" . helm-execute-persistent-action) 
-         ("C-j" . helm-next-line)
-         ("C-k" . helm-previous-line)
-         :map helm-buffer-map
-         ("C-k" . helm-previous-line)
-         ("C-l" . helm-buffer-switch-other-window)
-         ("C-d" . helm-buffer-run-kill-buffers)
-         :map helm-find-files-map
-         ("C-k" . helm-previous-line)
-         ("C-d" . helm-ff-delete-char-backward))
-  :init
-  (helm-mode 1)
+  :bind (("C-s" . swiper)
+         :map ivy-minibuffer-map
+         ("TAB" . ivy-alt-done)
+         ("C-j" . ivy-next-line)
+         ("C-k" . ivy-previous-line)
+         :map ivy-switch-buffer-map
+         ("C-k" . ivy-previous-line)
+         ("C-l" . ivy-done)
+         ("C-d" . ivy-switch-buffer-kill)
+         :map ivy-reverse-i-search-map
+         ("C-k" . ivy-previous-line)
+         ("C-d" . ivy-reverse-i-search-kill))
+  :init (ivy-mode 1))
+
+(use-package ivy-rich
+  :after ivy
+  :init (ivy-rich-mode 1))
+
+(use-package counsel
+  :bind (("M-x" . counsel-M-x)
+	 ("C-x b" . counsel-switch-buffer)
+	 ("C-x C-f" . counsel-find-file)
+	 :map minibuffer-local-map
+	 ("C-r" . 'counsel-minibuffer-history))
   :config
-  (setq helm-M-x-show-short-doc t)
-  (helm-autoresize-mode 1)
-  (setq helm-autoresize-max-height 30)
-  (setq helm-autoresize-min-height 20) 
-  (setq helm-candidate-number-limit 500)
-  (setq helm-mode-fuzzy-match t)
-  (setq helm-completion-in-region-fuzzy-match t))
-
-
-(defun my-helm-toggle-header-line ()
-  "Moves text entry to header."
-  (if (with-helm-buffer helm-echo-input-in-header-line)
-      (progn
-        (setq helm-display-header-line t)
-        (setq-local header-line-format
-                    '(:eval (concat " " (helm-get-selection)))))
-    (setq header-line-format nil)))
-
-(setq helm-echo-input-in-header-line t)
-
-;; -------------------------------------- finish config helm
+  (setq ivy-initial-inputs-alist nil)) ;;Dont start searches with ^
 
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
@@ -102,14 +87,15 @@
   (setq which-key-idle-delay 1))
 
 (use-package helpful
-  :ensure t
+  :commands (helpful-callable helpful-variable helpful-command helpful-key)
+  :custom
+  (counsel-describe-function-function #'helpful-callable)
+  (counsel-describe-variable-function #'helpful-variable)
   :bind
-  (("C-h f" . helpful-callable)  ;; Sustituye describe-function
-   ("C-h v" . helpful-variable)  ;; Sustituye describe-variable
-   ("C-h k" . helpful-key)       ;; Sustituye describe-key
-   ("C-c C-d" . helpful-at-point)  ;; Ayuda contextual
-   ("C-h F" . helpful-function)  ;; Para funciones puramente funcionales
-   ("C-h C" . helpful-command))) ;; Para comandos interactivos
+  ([remap describe-function] . counsel-describe-function)
+  ([remap describe-command] . helpful-command)
+  ([remap describe-variable] . counsel-describe-variable)
+  ([remap describe-key] . helpful-key))
 
 
 (use-package magit
@@ -122,19 +108,16 @@
 
 (use-package projectile
   :diminish projectile-mode
-  :config (projectile-mode)
-  :custom ((projectile-completion-system 'helm))
+  :custom ((projectile-completion-system 'ivy))
   :bind-keymap
   ("C-c p" . projectile-command-map)
   :config
-  (add-to-list 'projectile-project-root-files ".sync/")
+  (projectile-mode 1)
+  (add-to-list 'projectile-project-root-files ".stfolder/")
   :init
   (when (file-directory-p "~/Documents")
     (setq projectile-project-search-path '("~/Documents")))
   (setq projectile-switch-project-action #'projectile-dired))
 
-(use-package helm-projectile
-  :ensure t
-  :after (projectile helm)
-  :config
-  (helm-projectile-on))
+(use-package counsel-projectile
+  :config (counsel-projectile-mode))
